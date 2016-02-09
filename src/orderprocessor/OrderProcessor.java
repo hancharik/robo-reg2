@@ -8,32 +8,41 @@ package orderprocessor;
 import java.util.ArrayList;
 
 /**
- *
+ *https://docs.oracle.com/javase/tutorial/essential/concurrency/runthread.html
  * @author Mark
  */
-public class OrderProcessor {
+public class OrderProcessor implements Runnable {
 
     public static CashRegister register1;
     public static CashRegister register2;
     public static CashRegister register3;
     public static CashRegister register4;
     public static ArrayList<Item> inventory;
+     public static ArrayList<String> results;
    public static BusinessAccount mainAccount;
-    public static int transactions;// = 0;
+    public static int transactions;// how many transactions
    public static int totalItemsSold;
-   public static int registerTransactions;
+   public static int registerTransactions;  // the counter
    
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        
+         (new Thread(new OrderProcessor())).start();
+        
+        
         
         setInventory(100);
-        registerTransactions = 100;
+        transactions = 10;
+        
+        
+        registerTransactions = 0;  // set counter to zero
+         
+        totalItemsSold = 0;
         mainAccount = new BusinessAccount();
        
         
         
         System.out.println("Starting inventory = " + inventory.size() + ", till = " + mainAccount.bankAccount);
-        transactions = 1; // set this to one so that the first transaction is #1
-        totalItemsSold = 0;
+        
         //inventory = new ArrayList();
         
         register1 = new CashRegister(1);
@@ -44,12 +53,24 @@ public class OrderProcessor {
         register2.start();
        register3.start();
         register4.start();
+        register4.join();
+        
         System.out.println("Ending inventory = " + inventory.size() + ", till = " + mainAccount.bankAccount);
+        
+      Thread.sleep(3000);
+       System.out.println("after 3 seconds");
+       printResults();
+       Thread.sleep(3000);
+       System.out.println("after 6 seconds");
+       printResults();
     } // end main
 
      private static void setInventory(int unitsInInventory) {
 
          inventory = new ArrayList();
+         // might as well do this while we're here...
+         results = new ArrayList();
+         
          
         for (int i = 0; i < unitsInInventory; i++) {
             Item item = new Item();
@@ -59,6 +80,24 @@ public class OrderProcessor {
     } // END SET INVENTORY   
     
 
+     public static void printResults() {
+         
+         
+         System.out.println("!!!!!!!!!!!!!!PRINTING RESULTS!!!!!!!!!!!!!\n!!!!!!!!!!!!!PRINTING RESULTS!!!!!!!!!!!!!\n!!!!!!!!!!!!!!PRINTING RESULTS!!!!!!!!!!!!!\n!!!!!!!!!!!!!PRINTING RESULTS!!!!!!!!!!!!!");
+         
+         
+       for(int i = 0; i < results.size(); i++){
+         
+         System.out.println(results.get(i));
+       }  
+         
+         
+     }
+
+    @Override
+    public void run() {
+        printResults();
+    }
     
     
     

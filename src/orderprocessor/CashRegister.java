@@ -24,7 +24,7 @@ public class CashRegister extends Thread {
     int itemsSold = 0;
     int lostSales = 0;
     Random random;
-    int identifier;
+    private int identifier;
     Item i = new Item();
 
     public CashRegister(int identifier) {
@@ -42,8 +42,8 @@ public class CashRegister extends Thread {
 
     public void run() {
 
-        roboCashier(25);
-        checkTillForErrors();
+        roboCashier(this.transactions);
+       // checkTillForErrors();
     }
 
     public void getCustomer() {
@@ -89,11 +89,15 @@ public class CashRegister extends Thread {
 
     }
 
-    public void addItemToCheckout(int howManyItems) {
-
-        System.out.print("Cashier #" + identifier);// System.out.print("CashRegister.java line 105 - Cashier #" + identifier);
-        System.out.print(", Transaction #" + (orderprocessor.OrderProcessor.transactions));
-        System.out.println(" items ordered: " + howManyItems + " on hand inventory: " + orderprocessor.OrderProcessor.inventory.size());
+    public synchronized void  addItemToCheckout(int howManyItems) {
+        // should we increment and then assign?
+        orderprocessor.OrderProcessor.registerTransactions++;
+        String transTemp = "Cashier #" + identifier + " == Transaction #" + orderprocessor.OrderProcessor.registerTransactions;
+        orderprocessor.OrderProcessor.results.add(transTemp);
+        //System.out.println(transTemp);
+       // System.out.print("Cashier #" + identifier);// System.out.print("CashRegister.java line 105 - Cashier #" + identifier);
+      //  System.out.print(", Transaction #" + (orderprocessor.OrderProcessor.transactions));
+     //   System.out.println(" items ordered: " + howManyItems + " on hand inventory: " + orderprocessor.OrderProcessor.inventory.size());
 
         if (howManyItems <= orderprocessor.OrderProcessor.inventory.size()) {
          //   System.out.print("111 - Cashier #" + identifier);
@@ -101,8 +105,8 @@ public class CashRegister extends Thread {
 
             for (int i = 0; i < howManyItems; i++) {
 
-                cart.add(orderprocessor.OrderProcessor.inventory.get(orderprocessor.OrderProcessor.inventory.size() - 1));
-                orderprocessor.OrderProcessor.inventory.remove(orderprocessor.OrderProcessor.inventory.size() - 1);  //remove the last element from the array
+                cart.add(orderprocessor.OrderProcessor.inventory.get(0));
+                orderprocessor.OrderProcessor.inventory.remove(orderprocessor.OrderProcessor.inventory.get(0));  //remove the last element from the array
 
             }
         } else {
@@ -118,7 +122,7 @@ public class CashRegister extends Thread {
         orderprocessor.OrderProcessor.inventory.add(item);
     }
 
-    public void returnItems(int numItemsReturned) {
+    public synchronized void returnItems(int numItemsReturned) {
 
         for (int i = 0; i < numItemsReturned; i++) {
             Item a = new Item();
@@ -128,9 +132,12 @@ public class CashRegister extends Thread {
             till.bankAccount = till.bankAccount - a.getItemPrice();
 
         }
-
-        System.out.println("Cashier #" + identifier + ", Transaction #" + (orderprocessor.OrderProcessor.transactions) + " returning " + numItemsReturned + " items to inventory");
-        orderprocessor.OrderProcessor.transactions++;
+        // since we increment and then assign in add item to checkout
+        orderprocessor.OrderProcessor.registerTransactions++;
+        String tempString = "Cashier #" + identifier + " == Transaction #" + orderprocessor.OrderProcessor.registerTransactions + " returning " + numItemsReturned + " items to inventory";
+        orderprocessor.OrderProcessor.results.add(tempString);
+        //System.out.println();
+        
     }
 
     public synchronized void processTransaction() {
@@ -165,7 +172,7 @@ public class CashRegister extends Thread {
 
     } // END SET INVENTORY
 
-    public void checkTillForErrors() {
+    public void checkTillForErrors8() {
         System.out.println("\nRobo cashier # " + identifier + " counting the drawer at the end of it's shift...");
         if ((orderprocessor.OrderProcessor.totalItemsSold * i.getItemPrice()) == till.bankAccount) {
             System.out.println("the money is correct");
