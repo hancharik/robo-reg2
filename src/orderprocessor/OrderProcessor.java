@@ -20,7 +20,7 @@ public class OrderProcessor implements Runnable {
     public static ArrayList<Item> inventory;
      public static ArrayList<String> results;
    public static BusinessAccount mainAccount;
-    public static int transactions;// how many transactions
+    public static int transactions;// how many transactions? set to 100  at line 35
    public static int totalItemsSold;
    public static int registerTransactions;  // the counter
    
@@ -28,23 +28,27 @@ public class OrderProcessor implements Runnable {
         
          (new Thread(new OrderProcessor())).start();
         
-        
+        Thread.sleep(3000);
+       System.out.println("after 3 seconds");
         
         setInventory(100);
-        transactions = 10;
+        transactions = 100;
         
-        
+       Thread.sleep(3000);
+       System.out.println("after 6 seconds"); 
         registerTransactions = 0;  // set counter to zero
          
         totalItemsSold = 0;
         mainAccount = new BusinessAccount();
        
-        
+        Thread.sleep(3000);
+       System.out.println("after 9 seconds");
         
         System.out.println("Starting inventory = " + inventory.size() + ", till = " + mainAccount.bankAccount);
         
         //inventory = new ArrayList();
-        
+        Thread.sleep(3000);
+       System.out.println("after 12 seconds");
         register1 = new CashRegister(1);
         register2 = new CashRegister(2);
         register3 = new CashRegister(3);
@@ -58,11 +62,18 @@ public class OrderProcessor implements Runnable {
         System.out.println("Ending inventory = " + inventory.size() + ", till = " + mainAccount.bankAccount);
         
       Thread.sleep(3000);
-       System.out.println("after 3 seconds");
+       System.out.println("after 3(15) seconds");
        printResults();
        Thread.sleep(3000);
-       System.out.println("after 6 seconds");
+       System.out.println("after 6(18) seconds");
        printResults();
+       Thread.sleep(3000);
+       System.out.println("after 9(21) seconds");
+       printResults();
+       Thread.sleep(3000);
+       System.out.println("after 12(24) seconds");
+       printResults();
+       System.out.println("end main");
     } // end main
 
      private static void setInventory(int unitsInInventory) {
