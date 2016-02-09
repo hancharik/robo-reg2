@@ -62,7 +62,7 @@ public class CashRegister extends Thread {
     }
 
     //}
-    public void transaction(int numberOfTransactions) {
+    public synchronized void transaction(int numberOfTransactions) {
         random = new Random();
         int randomItemCount;// = 1 + random.nextInt( 1000 );
         for (int i = 0; i < numberOfTransactions; i++) {
@@ -133,7 +133,7 @@ public class CashRegister extends Thread {
         orderprocessor.OrderProcessor.transactions++;
     }
 
-    public void processTransaction() {
+    public synchronized void processTransaction() {
 
         int counter = cart.size() - 1;
 
